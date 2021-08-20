@@ -39,7 +39,7 @@ router.get('/:contactId', async (req, res, next) => {
 
 })
 
-router.post('/', async (req, res, next) => {
+router.post('/',validCreateContact, async (req, res, next) => {
   try {
     const contact = await Contacts.addContact(req.body)
     return res.status(201).json({
