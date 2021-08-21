@@ -8,7 +8,7 @@ const schemaCreateContact = Joi.object({
     email: Joi.string()
         .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).optional(),
     phone: Joi.string()
-    .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).required(),
+        .required(),
 })
 
 const schemaUpdateContact = Joi.object({
@@ -19,24 +19,23 @@ const schemaUpdateContact = Joi.object({
     email: Joi.string()
         .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).optional(),
     phone: Joi.string()
-    .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).optional(),
+        .optional(),
 }).or('name', 'email', 'phone')
 
 const validate = async (schema, obj, next) => {
     try {
         await schema.validateAsync(obj)
-        return(next)
+        return next()
     } catch (err) {
         console.log(err);
         next({status: 400, message: err.message.replace(/"/g, "'")})
     }
 }
-
 module.exports = {
     validCreateContact: async (req, res, next) => {
         return await validate(schemaCreateContact, req.body, next)
     },
     validUpdateContact: async (req, res, next) => {
-        return await validate(schemaUpdateContact, req.body, next)
+        return  await validate(schemaUpdateContact, req.body, next)
     }
 }
