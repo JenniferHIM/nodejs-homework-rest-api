@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const Contacts = require('../../model/index')
 const { validCreateContact, validUpdateContact, validationObjectId } = require('./valid-contacts')
-const handleError = require('../../use/handle-error')
+const handleError = require('../../helper/handle-error')
 
 router.get('/', async (req, res, next) => {
   try {
