@@ -4,10 +4,6 @@ const uriDb = process.env.URI_DB
 
 const db = mongoose.connect(uriDb, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true, poolSize: 5 })
 
-mongoose.connection.on('connected', () => {
-    console.log('Connection is open')
-})
-
 mongoose.connection.on('error', (err) => {
     console.log(`Mongoose error: ${err.message}`);
 })

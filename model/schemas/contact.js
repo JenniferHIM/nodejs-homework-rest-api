@@ -1,5 +1,6 @@
 const mongoose = require('mongoose') 
-  const { Schema, model } = mongoose
+const {Schema, model, SchemaTypes} = mongoose
+const mongoosePaginate = require('mongoose-paginate-v2')
 
   const contactSchema = new Schema({
       name: {
@@ -27,10 +28,8 @@ const mongoose = require('mongoose')
           get: (data)=>(data.sort())
       },
       owner: {
-          name: String,
-          phone: Number,
-          email: String,
-          favorite: Boolean
+          type: SchemaTypes.ObjectId,
+          ref: 'user',
       }
   }, {
       versionKey: false,
@@ -47,6 +46,8 @@ contactSchema.path('name').validate((value) => {
 contactSchema.virtual('reNameEmail').get( function () {
     return `${this.name} ${this.email} name`
 })
+
+contactSchema.plugin(mongoosePaginate)
 
 const Contact = model('contacts', contactSchema)
   
