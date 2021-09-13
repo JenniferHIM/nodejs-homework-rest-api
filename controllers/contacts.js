@@ -1,25 +1,23 @@
-const express = require('express')
-const router = express.Router()
-const Contacts = require('../../model/index')
-const { validCreateContact, validUpdateContact, validationObjectId } = require('./valid-contacts')
-const handleError = require('../../use/handle-error')
+const Contacts = require('../model')
 
-router.get('/', async (req, res, next) => {
+const getAll = async (req, res, next) => {
   try {
-    const contacts = await Contacts.listContacts()
+    const userId = req.user?.id
+    const contacts = await Contacts.listContacts(userId, req.query)
     return res.json({
       status: "success",
       code: 200,
       data: {
       contacts
-    }
+}
     })
   } catch (e){next(e)}
-})
+}
 
-router.get('/:contactId', validationObjectId, async (req, res, next) => {
+const getById = async (req, res, next) => {
   try {
-    const contact = await Contacts.getContactById(req.params.contactId)
+    const userId = req.user?.id
+    const contact = await Contacts.getContactById(userId,  req.params.contactId)
     console.log(contact)
     if (contact) {
       return res.json({
@@ -37,20 +35,28 @@ router.get('/:contactId', validationObjectId, async (req, res, next) => {
       })
     }
   } catch(e){next(e)}
-})
+}
 
-router.post('/', validCreateContact, handleError(async (req, res, next) => {
-    const contact = await Contacts.addContact(req.body)
-    return res.status(201).json({
+const createContact = async (req, res, next) => {
+  try {
+    const userId = req.user?.id
+    const contact = await Contacts.addContact(userId, req.body)
+      return res.status(201).json({
       status: "success",
       code: 201,
-      data: {contact}
+      data: {
+        contact
+      }
     })
-}))
+  } catch (e) {
+    next(e)
+  }
+}
 
-router.delete('/:contactId', async (req, res, next) => {
-   try {
-    const contact = await Contacts.removeContact(req.params.contactId)
+const deleteContact = async (req, res, next) => {
+  try {
+     const userId = req.user?.id
+    const contact = await Contacts.removeContact(userId, req.params.contactId)
     if (contact) {
       return res.json({
         status: 'success',
@@ -68,11 +74,12 @@ router.delete('/:contactId', async (req, res, next) => {
       })
     }
   } catch(e){next(e);}
-})
+}
 
-router.patch('/:contactId',validUpdateContact, async (req, res, next) => {
+const updContact = async (req, res, next) => {
   try {
-    const contact = await Contacts.updateContact(req.params.contactId, req.body)
+    const userId = req.user?.id
+    const contact = await Contacts.updateContact(userId, req.params.contactId, req.body)
     if (contact) {
       return res.json({
         status: 'success',
@@ -89,11 +96,12 @@ router.patch('/:contactId',validUpdateContact, async (req, res, next) => {
       })
     }
   } catch(e){next(e)}
-})
+}
 
-router.patch('/:contactId/favorite', async (req, res, next) => {
+const updStatus = async (req, res, next) => {
   try {
-    const contact = await Contacts.updateStatusContact(req.params.contactId, req.body)
+    const userId = req.user?.id
+    const contact = await Contacts.updateStatusContact(userId, req.params.contactId, req.body)
     if (contact) {
       return res.json({
         status: 'success',
@@ -110,11 +118,12 @@ router.patch('/:contactId/favorite', async (req, res, next) => {
       })
     }
   } catch(e){next(e)}
-})
+}
 
-router.put('/:contactId',validUpdateContact, async (req, res, next) => {
+const updContactPut = async (req, res, next) => {
   try {
-    const contact = await Contacts.updateContact(req.params.contactId, req.body)
+    const userId = req.user?.id
+    const contact = await Contacts.updateContact(userId, req.params.contactId, req.body)
     if (contact) {
       return res.json({
         status: 'success',
@@ -131,6 +140,15 @@ router.put('/:contactId',validUpdateContact, async (req, res, next) => {
       })
     }
   } catch(e){next(e);}
-})
+}
 
-module.exports = router
+
+module.exports = {
+  getAll,
+  getById,
+  updContact,
+  updContactPut,
+  updStatus,
+  deleteContact,
+  createContact,
+  }
