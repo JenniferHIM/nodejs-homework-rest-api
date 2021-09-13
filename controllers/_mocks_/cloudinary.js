@@ -3,7 +3,7 @@ module.exports.v2 = {
     uploader: {
         upload: (path, options, cb) => {
             cb(null, {
-                public_id: 1233456,
+                public_id: 123456,
                 secure_url: 'secure_url_cloudinary'
             })
         }
