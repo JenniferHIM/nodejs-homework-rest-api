@@ -143,6 +143,37 @@ const updContactPut = async (req, res, next) => {
 }
 
 
+const starter = async (req, res, next) => {
+  return res.json({
+    status: 'success',
+    code: 200,
+    data: {
+      message: 'For starter'
+    }
+  })
+}
+
+const pro = async (req, res, next) => {
+  return res.json({
+    status: 'success',
+    code: 200,
+    data: {
+      message: 'For pro'
+    }
+  })
+}
+
+const business = async (req, res, next) => {
+  return res.json({
+    status: 'success',
+    code: 200,
+    data: {
+      message: 'For business'
+    }
+  })
+}
+
+
 module.exports = {
   getAll,
   getById,
@@ -151,4 +182,7 @@ module.exports = {
   updStatus,
   deleteContact,
   createContact,
+  starter,
+  business,
+  pro
   }

@@ -43,7 +43,7 @@ contactSchema.path('name').validate((value) => {
     return re.test(String(value))
 })
 
-contactSchema.virtual('reNameEmail').get( function () {
+contactSchema.virtual('strNameEmail').get( function () {
     return `${this.name} ${this.email} name`
 })
 
