@@ -9,6 +9,14 @@ const HttpCode = {
     CONFLICT: 409
 }
 
+const Status = {
+    STARTER: 'starter',
+    PRO: 'pro',
+    BUSINESS: 'business'
+}
+
+
 module.exports = {
-    HttpCode
+    HttpCode,
+    Status
 }

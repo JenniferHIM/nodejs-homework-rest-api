@@ -3,10 +3,16 @@ const router = express.Router()
 const { validCreateContact, validUpdateContact, validationObjectId, validQuery } = require('./valid-contacts')
 const cntrl = require('../../controllers/contacts')
 const guard = require('../../helpers/guard')
+const role = require('../../helpers/role')
+const {Status} = require('../../helpers/constants')
 
 
 router.get('/', guard, validQuery, cntrl.getAll)
 router.post('/', guard, validCreateContact, cntrl.createContact)
+
+router.get('/starter', guard, role(Status.STARTER), cntrl.starter)
+router.get('/pro',guard, role(Status.PRO), cntrl.pro)
+router.get('/business',guard, role(Status.BUSINESS), cntrl.business)
 
 router.get('/:contactId', guard, validationObjectId, cntrl.getById)
 router.delete('/:contactId', guard, cntrl.deleteContact)

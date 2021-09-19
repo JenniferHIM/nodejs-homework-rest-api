@@ -1,6 +1,8 @@
 const mongoose = require('mongoose')
+const gravatar = require('gravatar')
 const {Schema, model} = mongoose
 const bcrypt = require('bcryptjs')
+const {Status} = require('../../helpers/constants')
 const SALT_FACTOR = 6
 
 const userSchema = new Schema(
@@ -23,15 +25,25 @@ const userSchema = new Schema(
           return re.test(String(value).toLocaleLowerCase())
     }
   },
-  subscription: {
+ subscription: {
     type: String,
-    enum: ["starter", "pro", "business"],
-    default: "starter"
+    enum: [Status.STARTER, Status.PRO, Status.BUSINESS],
+    default: Status.STARTER
   },
   token: {
     type: String,
     default: null,
-        },
+    },
+    avatar: {
+      type: String,
+      default: function () {
+        return gravatar.url(this.email, {s: 250}, true)
+      }
+    },
+    idCloudAvatar: {
+        type: String,
+        default: null
+      }
     }, {
         versionKey: false,
         timestamps: true

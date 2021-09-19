@@ -1,8 +1,22 @@
+const jwt = require('jsonwebtoken')
+const fs = require('fs/promises')
+// const path = require('path')
+// const jimp = require('jimp')
+const cloudinary = require('cloudinary').v2
+const {promisify} = require('util')
 const Users = require('../model/users')
 const { HttpCode } = require('../helpers/constants')
-const jwt = require('jsonwebtoken')
+
 require('dotenv').config()
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY
+
+cloudinary.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.API_KEY_CLOUD,
+    api_secret: process.env.API_SECRET_CLOUD
+})
+
+const uploadToCloud = promisify(cloudinary.uploader.upload)
 
 const register = async (req, res, next) => {
     const {  email } = req.body
@@ -22,7 +36,8 @@ const register = async (req, res, next) => {
             data: {
                 id: newUser.id,
                 email: newUser.email,
-                subscription: newUser.subscription
+                subscription: newUser.subscription,
+                avatar: newUser.avatar
             }
         })
     } catch (e) {
@@ -57,8 +72,31 @@ const logout = async (req, res, next) => {
     return res.status(HttpCode.NO_CONTENT).json({})
 }
 
+const updateAvatar = async (req, res, next) => {
+    const { id } = req.user
+    const {idCloudAvatar, avatarUrl} = await saveAvatarUserCloud(req)
+    await Users.updateAvatar(id, avatarUrl, idCloudAvatar)
+    return res.status(HttpCode.OK).json({
+        status: 'success',
+        code: HttpCode.OK,
+        data: {avatarUrl}
+    })
+}
+// Облачное хранение
+const saveAvatarUserCloud = async (req) => {
+    const pathFile = req.file.path
+    const { public_id: idCloudAvatar , secure_url: avatarUrl} = await uploadToCloud(pathFile, {
+        public_id: req.user.idCloudAvatar?.replace('Avatars/', ''),
+        folder: 'Avatars',
+        transformation: {width: 250, height: 250, crop: 'pad' }
+    })
+    await fs.unlink(pathFile)
+    return {idCloudAvatar, avatarUrl}
+}
+
 module.exports = {
     register,
     login,
-    logout
+    logout,
+    updateAvatar
 }
