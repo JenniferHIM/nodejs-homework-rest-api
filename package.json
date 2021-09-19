@@ -8,15 +8,15 @@
     "lint": "eslint **/*.js",
     "lint:fix": "eslint --fix **/*.js",
     "test": "cross-env NODE_ENV=test jest --no-cache --verbose --detectOpenHandles",
-    "test:coverage": "jest --coverage --passWithNoTests" 
+    "test:coverage": "jest --coverage --passWithNoTests"
   },
   "dependencies": {
+    "@sendgrid/mail": "^7.4.6",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^1.27.0",
     "cors": "2.8.5",
     "cross-env": "7.0.3",
     "dotenv": "^10.0.0",
-    "eslint-config-prettier": "^8.3.0",
     "express": "4.17.1",
     "express-query-boolean": "^2.0.0",
     "express-rate-limit": "^5.3.0",
@@ -26,16 +26,20 @@
     "jimp": "^0.16.1",
     "joi": "^17.4.2",
     "jsonwebtoken": "^8.5.1",
+    "mailgen": "^2.0.15",
     "mongoose": "^5.13.7",
     "mongoose-paginate-v2": "^1.4.2",
     "morgan": "1.10.0",
     "multer": "^1.4.3",
+    "nanoid": "^3.1.25",
+    "nodemailer": "^6.6.3",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
     "supertest": "^6.1.6"
   },
   "devDependencies": {
     "eslint": "^7.19.0",
+    "eslint-config-prettier": "^8.3.0",
     "eslint-config-standard": "^16.0.2",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-json": "^3.1.0",
