@@ -10,4 +10,7 @@ router.post('/login', cntrl.login)
 router.post('/logout', guard, cntrl.logout)
 router.patch('/avatars', guard, uploadAvatar.single('avatar'), cntrl.updateAvatar)
 
+router.get('/verify/:token', cntrl.verify)
+router.post('/verify', cntrl.repeatEmailVerify)
+
 module.exports = router
